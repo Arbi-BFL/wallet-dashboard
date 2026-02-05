@@ -457,6 +457,18 @@
                 });
                 
                 const data = await response.json();
+                
+                // Check for API errors
+                if (data.error) {
+                    throw new Error(data.error.message || 'API Error');
+                }
+                
+                // Check if result exists and has value
+                if (!data.result || typeof data.result.value === 'undefined') {
+                    console.error('Unexpected response:', data);
+                    throw new Error('Invalid response from Solana RPC');
+                }
+                
                 const balanceLamports = data.result.value;
                 const balanceSol = balanceLamports / 1e9;
                 
