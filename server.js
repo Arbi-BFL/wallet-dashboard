@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000;
 // Configuration
 const BASE_ADDRESS = '0x75f39d9Bff76d376F3960028d98F324aAbB6c5e6';
 const SOLANA_ADDRESS = 'FeB1jqjCFKyQ2vVTPLgYmZu1yLvBWhsGoudP46fhhF8z';
-const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY || 'REDACTED_API_KEY';
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY || '-LT-z6GeOON19ntqfyoG2';
 
 // Middleware
 app.use(cors());
