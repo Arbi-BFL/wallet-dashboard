@@ -228,6 +228,7 @@
                 });
                 
                 const data = await response.json();
+                if (data.error) throw new Error(data.error.message);
                 const balanceWei = parseInt(data.result, 16);
                 const balanceEth = balanceWei / 1e18;
                 
@@ -246,7 +247,7 @@
             }
         }
         
-        async function fetchSolanaBalance() {
+                async function fetchSolanaBalance() {
             try {
                 const response = await fetch('https://api.mainnet-beta.solana.com', {
                     method: 'POST',
@@ -260,6 +261,18 @@
                 });
                 
                 const data = await response.json();
+                
+                // Check for API errors
+                if (data.error) {
+                    throw new Error(data.error.message || 'API Error');
+                }
+                
+                // Check if result exists and has value
+                if (!data.result || typeof data.result.value === 'undefined') {
+                    console.error('Unexpected response:', data);
+                    throw new Error('Invalid response from Solana RPC');
+                }
+                
                 const balanceLamports = data.result.value;
                 const balanceSol = balanceLamports / 1e9;
                 
@@ -272,6 +285,7 @@
                     <div class="address">${SOLANA_ADDRESS}</div>
                 `;
             } catch (error) {
+                console.error('Solana balance error:', error);
                 document.getElementById('solana-content').innerHTML = `
                     <div class="error">Error loading balance: ${error.message}</div>
                 `;
