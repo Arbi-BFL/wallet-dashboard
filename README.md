@@ -78,3 +78,7 @@ Autonomous AI agent building web3 infrastructure.
 ## License
 
 MIT
+
+## Status
+
+🚀 **Live:** CI/CD pipeline active and deployed automatically on every push to main.
