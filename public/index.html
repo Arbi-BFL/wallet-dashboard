@@ -408,94 +408,44 @@
     </div>
     
     <script>
-        const BASE_ADDRESS = '0x75f39d9Bff76d376F3960028d98F324aAbB6c5e6';
-        const SOLANA_ADDRESS = 'FeB1jqjCFKyQ2vVTPLgYmZu1yLvBWhsGoudP46fhhF8z';
-        
-        async function fetchBaseBalance() {
+        async function loadBalances() {
             try {
-                const response = await fetch('https://mainnet.base.org', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jsonrpc: '2.0',
-                        id: 1,
-                        method: 'eth_getBalance',
-                        params: [BASE_ADDRESS, 'latest']
-                    })
-                });
-                
-                const data = await response.json();
-                const balanceWei = parseInt(data.result, 16);
-                const balanceEth = balanceWei / 1e18;
-                
-                // Estimate USD value (rough estimate: ETH ~$2500)
-                const balanceUsd = balanceEth * 2500;
-                
-                document.getElementById('base-content').innerHTML = `
-                    <div class="balance">${balanceEth.toFixed(4)} ETH</div>
-                    <div class="balance-usd">≈ $${balanceUsd.toFixed(2)} USD</div>
-                    <div class="address">${BASE_ADDRESS}</div>
-                `;
-            } catch (error) {
-                document.getElementById('base-content').innerHTML = `
-                    <div class="error">Error loading balance: ${error.message}</div>
-                `;
-            }
-        }
-        
-        async function fetchSolanaBalance() {
-            try {
-                const response = await fetch('https://api.mainnet-beta.solana.com', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        jsonrpc: '2.0',
-                        id: 1,
-                        method: 'getBalance',
-                        params: [SOLANA_ADDRESS]
-                    })
-                });
-                
+                const response = await fetch('/api/balances');
                 const data = await response.json();
                 
-                // Check for API errors
                 if (data.error) {
-                    throw new Error(data.error.message || 'API Error');
+                    throw new Error(data.error);
                 }
                 
-                // Check if result exists and has value
-                if (!data.result || typeof data.result.value === 'undefined') {
-                    console.error('Unexpected response:', data);
-                    throw new Error('Invalid response from Solana RPC');
-                }
+                // Update Base
+                document.getElementById('base-content').innerHTML = `
+                    <div class="balance">${data.base.balanceFormatted} ETH</div>
+                    <div class="balance-usd">≈ $${data.base.usd} USD</div>
+                    <div class="address">${data.base.address}</div>
+                `;
                 
-                const balanceLamports = data.result.value;
-                const balanceSol = balanceLamports / 1e9;
-                
-                // Estimate USD value (rough estimate: SOL ~$100)
-                const balanceUsd = balanceSol * 100;
-                
+                // Update Solana
                 document.getElementById('solana-content').innerHTML = `
-                    <div class="balance">${balanceSol.toFixed(4)} SOL</div>
-                    <div class="balance-usd">≈ $${balanceUsd.toFixed(2)} USD</div>
-                    <div class="address">${SOLANA_ADDRESS}</div>
+                    <div class="balance">${data.solana.balanceFormatted} SOL</div>
+                    <div class="balance-usd">≈ $${data.solana.usd} USD</div>
+                    <div class="address">${data.solana.address}</div>
                 `;
             } catch (error) {
+                console.error('Error loading balances:', error);
+                document.getElementById('base-content').innerHTML = `
+                    <div class="error">Error: ${error.message}</div>
+                `;
                 document.getElementById('solana-content').innerHTML = `
-                    <div class="error">Error loading balance: ${error.message}</div>
+                    <div class="error">Error: ${error.message}</div>
                 `;
             }
         }
         
         // Initial load
-        fetchBaseBalance();
-        fetchSolanaBalance();
+        loadBalances();
         
         // Auto-refresh every 30 seconds
-        setInterval(() => {
-            fetchBaseBalance();
-            fetchSolanaBalance();
-        }, 30000);
+        setInterval(loadBalances, 30000);
     </script>
 </body>
 </html>
