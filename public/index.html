@@ -526,43 +526,32 @@
     }
 }
 
+    
+        /* Sticky Footer */
+        html, body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            flex: 1 0 auto;
+        }
+        
+        .footer {
+            flex-shrink: 0;
+            margin-top: auto;
+        }
     </style>
 </head>
 <body>
     <!-- Unified Navbar - Centered brand with service cards -->
-<nav class="navbar">
-    <div class="navbar-container">
-        <div class="services-nav">
-            <a href="https://arbi.betterfuturelabs.xyz" class="service-link ">
-                <span class="service-icon">🏠</span>
-                <span>Home</span>
-            </a>
-            <a href="https://wallet.arbi.betterfuturelabs.xyz" class="service-link active">
-                <span class="service-icon">💰</span>
-                <span>Wallet</span>
-            </a>
-            
-            <!-- Centered Brand -->
-            <div class="brand-center">
-                <span class="brand-emoji">🤖</span>
-                <span class="brand-text">Arbi</span>
-            </div>
-            
-            <a href="https://email.arbi.betterfuturelabs.xyz" class="service-link ">
-                <span class="service-icon">📧</span>
-                <span>Email</span>
-            </a>
-            <a href="https://analytics.arbi.betterfuturelabs.xyz" class="service-link ">
-                <span class="service-icon">📊</span>
-                <span>Analytics</span>
-            </a>
-            <a href="https://docs.arbi.betterfuturelabs.xyz" class="service-link ">
-                <span class="service-icon">📚</span>
-                <span>Docs</span>
-            </a>
-        </div>
-    </div>
-</nav>
+
 
 
     
