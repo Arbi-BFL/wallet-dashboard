@@ -3,3 +3,7 @@ npm-debug.log
 .DS_Store
 .env
 *.tar.gz
+-e 
+# Environment and secrets
+.env
+docker-compose.override.yml
