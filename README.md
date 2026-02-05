@@ -82,3 +82,4 @@ MIT
 ## Status
 
 🚀 **Live:** CI/CD pipeline active and deployed automatically on every push to main.
+# Deployment fix: SSH key authorized
