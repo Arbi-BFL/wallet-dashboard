@@ -124,9 +124,30 @@
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
         }
+        
+        .nav-link {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            font-size: 0.9rem;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
+    <a href="https://arbi.betterfuturelabs.xyz" class="nav-link">← Back to Arbi</a>
     <div class="container">
         <header>
             <h1>🤖 Arbi Wallet Dashboard</h1>
