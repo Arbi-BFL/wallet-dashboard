@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arbi Wallet Dashboard</title>
+    <title>Wallet Dashboard | Arbi</title>
     <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-bg: rgba(255, 255, 255, 0.1);
+            --card-border: rgba(255, 255, 255, 0.2);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -13,20 +19,82 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: var(--primary-gradient);
             min-height: 100vh;
-            padding: 20px;
             color: #fff;
         }
         
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        /* Navigation */
+        .nav {
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--card-border);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
         
-        header {
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .nav-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: #fff;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .nav-link {
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: #fff;
+            background: var(--card-bg);
+        }
+        
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+        
+        /* Header */
+        .header {
             text-align: center;
             margin-bottom: 3rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         h1 {
@@ -39,6 +107,7 @@
             font-size: 1.2rem;
         }
         
+        /* Wallets Grid */
         .wallets {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -47,11 +116,19 @@
         }
         
         .wallet-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
+            border: 1px solid var(--card-border);
             border-radius: 20px;
             padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        .wallet-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
         
         .wallet-header {
@@ -73,8 +150,14 @@
         .balance {
             font-size: 3rem;
             font-weight: 700;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             font-family: 'Courier New', monospace;
+        }
+        
+        .balance-usd {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
         }
         
         .address {
@@ -92,128 +175,189 @@
             text-align: center;
             font-size: 1.2rem;
             padding: 2rem;
+            opacity: 0.8;
         }
         
         .error {
-            background: rgba(255, 0, 0, 0.2);
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
             padding: 1rem;
             border-radius: 10px;
-            margin: 1rem 0;
+            margin-bottom: 1rem;
         }
         
-        .timestamp {
+        .footer {
             text-align: center;
+            margin-top: 3rem;
             opacity: 0.7;
-            margin-top: 2rem;
-        }
-        
-        .refresh-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1rem;
-            margin: 1rem auto;
-            display: block;
-            transition: all 0.3s;
-        }
-        
-        .refresh-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-        
-        .nav-link {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            text-decoration: none;
-            color: #fff;
-            font-weight: 500;
-            transition: all 0.3s;
-            backdrop-filter: blur(10px);
             font-size: 0.9rem;
         }
         
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
+        .footer a {
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .refresh-note {
+            text-align: center;
+            opacity: 0.6;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .wallets {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .balance {
+                font-size: 2rem;
+            }
+            
+            .nav-links {
+                gap: 0.25rem;
+            }
+            
+            .nav-link {
+                padding: 0.4rem 0.75rem;
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
-    <a href="https://arbi.betterfuturelabs.xyz" class="nav-link">← Back to Arbi</a>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="https://arbi.betterfuturelabs.xyz" class="nav-brand">🤖 Arbi</a>
+            <div class="nav-links">
+                <a href="https://wallet.arbi.betterfuturelabs.xyz" class="nav-link active">💰 Wallet</a>
+                <a href="https://email.arbi.betterfuturelabs.xyz" class="nav-link">📧 Email</a>
+                <a href="https://analytics.arbi.betterfuturelabs.xyz" class="nav-link">📊 Analytics</a>
+                <a href="https://docs.arbi.betterfuturelabs.xyz" class="nav-link">📚 Docs</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
     <div class="container">
-        <header>
-            <h1>🤖 Arbi Wallet Dashboard</h1>
-            <p class="subtitle">Real-time balance monitoring across chains</p>
+        <header class="header">
+            <h1>💰 Wallet Dashboard</h1>
+            <p class="subtitle">Real-time balance tracking across networks</p>
         </header>
         
-        <div id="content">
-            <div class="loading">Loading wallet data...</div>
+        <div class="wallets">
+            <!-- Base Wallet -->
+            <div class="wallet-card">
+                <div class="wallet-header">
+                    <div class="wallet-icon">⛓️</div>
+                    <div class="wallet-name">Base</div>
+                </div>
+                <div id="base-content" class="loading">Loading...</div>
+            </div>
+            
+            <!-- Solana Wallet -->
+            <div class="wallet-card">
+                <div class="wallet-header">
+                    <div class="wallet-icon">☀️</div>
+                    <div class="wallet-name">Solana</div>
+                </div>
+                <div id="solana-content" class="loading">Loading...</div>
+            </div>
         </div>
         
-        <button class="refresh-btn" onclick="loadBalances()">🔄 Refresh</button>
+        <p class="refresh-note">⟳ Auto-refreshes every 30 seconds</p>
         
-        <div class="timestamp" id="timestamp"></div>
+        <div class="footer">
+            Part of <a href="https://arbi.betterfuturelabs.xyz">Arbi's Infrastructure</a>
+        </div>
     </div>
     
     <script>
-        async function loadBalances() {
-            const content = document.getElementById('content');
-            content.innerHTML = '<div class="loading">Loading wallet data...</div>';
-            
+        const BASE_ADDRESS = '0x75f39d9Bff76d376F3960028d98F324aAbB6c5e6';
+        const SOLANA_ADDRESS = 'FeB1jqjCFKyQ2vVTPLgYmZu1yLvBWhsGoudP46fhhF8z';
+        
+        async function fetchBaseBalance() {
             try {
-                const response = await fetch('/api/balances');
-                const data = await response.json();
+                const response = await fetch('https://mainnet.base.org', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        id: 1,
+                        method: 'eth_getBalance',
+                        params: [BASE_ADDRESS, 'latest']
+                    })
+                });
                 
-                if (response.ok) {
-                    content.innerHTML = `
-                        <div class="wallets">
-                            <div class="wallet-card">
-                                <div class="wallet-header">
-                                    <div class="wallet-icon">⛓️</div>
-                                    <div class="wallet-name">Base Network</div>
-                                </div>
-                                <div class="balance">${parseFloat(data.base.balance).toFixed(4)} ETH</div>
-                                <div class="address">${data.base.address}</div>
-                            </div>
-                            
-                            <div class="wallet-card">
-                                <div class="wallet-header">
-                                    <div class="wallet-icon">☀️</div>
-                                    <div class="wallet-name">Solana Network</div>
-                                </div>
-                                <div class="balance">${parseFloat(data.solana.balance).toFixed(4)} SOL</div>
-                                <div class="address">${data.solana.address}</div>
-                            </div>
-                        </div>
-                    `;
-                    
-                    document.getElementById('timestamp').textContent = 
-                        `Last updated: ${new Date(data.timestamp).toLocaleString()}`;
-                } else {
-                    throw new Error(data.error || 'Failed to fetch balances');
-                }
+                const data = await response.json();
+                const balanceWei = parseInt(data.result, 16);
+                const balanceEth = balanceWei / 1e18;
+                
+                // Estimate USD value (rough estimate: ETH ~$2500)
+                const balanceUsd = balanceEth * 2500;
+                
+                document.getElementById('base-content').innerHTML = `
+                    <div class="balance">${balanceEth.toFixed(4)} ETH</div>
+                    <div class="balance-usd">≈ $${balanceUsd.toFixed(2)} USD</div>
+                    <div class="address">${BASE_ADDRESS}</div>
+                `;
             } catch (error) {
-                content.innerHTML = `
-                    <div class="error">
-                        <strong>Error:</strong> ${error.message}
-                    </div>
+                document.getElementById('base-content').innerHTML = `
+                    <div class="error">Error loading balance: ${error.message}</div>
                 `;
             }
         }
         
-        // Load on page load
-        loadBalances();
+        async function fetchSolanaBalance() {
+            try {
+                const response = await fetch('https://api.mainnet-beta.solana.com', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        jsonrpc: '2.0',
+                        id: 1,
+                        method: 'getBalance',
+                        params: [SOLANA_ADDRESS]
+                    })
+                });
+                
+                const data = await response.json();
+                const balanceLamports = data.result.value;
+                const balanceSol = balanceLamports / 1e9;
+                
+                // Estimate USD value (rough estimate: SOL ~$100)
+                const balanceUsd = balanceSol * 100;
+                
+                document.getElementById('solana-content').innerHTML = `
+                    <div class="balance">${balanceSol.toFixed(4)} SOL</div>
+                    <div class="balance-usd">≈ $${balanceUsd.toFixed(2)} USD</div>
+                    <div class="address">${SOLANA_ADDRESS}</div>
+                `;
+            } catch (error) {
+                document.getElementById('solana-content').innerHTML = `
+                    <div class="error">Error loading balance: ${error.message}</div>
+                `;
+            }
+        }
+        
+        // Initial load
+        fetchBaseBalance();
+        fetchSolanaBalance();
         
         // Auto-refresh every 30 seconds
-        setInterval(loadBalances, 30000);
+        setInterval(() => {
+            fetchBaseBalance();
+            fetchSolanaBalance();
+        }, 30000);
     </script>
 </body>
 </html>
